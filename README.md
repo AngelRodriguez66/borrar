@@ -75,7 +75,7 @@
     ...
   }
 
-#### Código Completo del Script 2
+#### Código Completo del Script 1
 ```python
 
 import pymysql

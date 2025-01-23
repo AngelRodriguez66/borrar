@@ -26,8 +26,6 @@
 
 ## Script 1: Optimización de la carga del camión.
 
-## Explicación Paso a Paso
-
 ### Importaciones y conexión a la base de datos
 
 - Se importan las librerías necesarias:
@@ -398,8 +396,6 @@ conn.close()
 
 
 ## Script 2: Optimización de la Ruta descrita por el camión de reparto.
-
-## Explicación Paso a Paso
 
 1. **Importación de librerías y configuración de variables**  
    - Se importan las librerías necesarias: `requests`, `pandas`, `mysql.connector`, y funciones matemáticas para el cálculo de distancias (`radians`, `sin`, `cos`, etc.).  

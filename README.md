@@ -24,7 +24,66 @@
 
 ## 2. Descripción Detallada de los Scripts
 
-### Script 1: Optimización de Secuencia de Pedidos y Actualización de la Base de Datos
+
+
+
+markdown
+# Script 1: Optimización de la carga del camión.
+
+## Explicación Paso a Paso
+
+### Importaciones y conexión a la base de datos
+
+- Se importan las librerías necesarias:
+  - `pymysql` para conectar a la base de datos MySQL.
+  - `pandas` para manipular la información en forma de DataFrame.
+  - `pygad` para la parte de optimización con algoritmos genéticos.
+  - `KMeans` de `sklearn.cluster` para el clustering de pedidos.
+  - `folium` para la visualización en el mapa.
+  - `numpy` para manejo de arreglos y funciones matemáticas.
+- Se establece la conexión a la base de datos (`conn = pymysql.connect(...)).`
+
+### Consulta de datos
+
+- Se obtienen los datos de los **camiones** (`truck`) y los **pedidos** (`order`) desde la base de datos, guardándolos en DataFrames de pandas:
+  - `df_truck`: columnas `id`, `license_plate`, `max_mass`, `max_volume`.
+  - `df_order`: columnas `id`, `maximum_permissible_mass`, `maximum_permissible_volume`, `longitude`, `latitude`.
+
+### Funciones auxiliares
+
+- **`get_route_id(truck_id)`**: Dado el `id` de un camión, busca en la tabla `route` el `id` de la ruta asociada.
+- **`update_order_route(order_id, route_id)`**: Actualiza el campo `route_id` de un pedido en la tabla `order`.
+- **`can_fit_in_truck(cluster_df, truck_data, truck_id)`**: Verifica si **todo** un cluster de pedidos puede caber en el camión dado su uso actual (masa y volumen).
+- **`fitness_function(...)`**: Función de aptitud (fitness) que se emplea en `pygad` para comprobar si la selección de clusters (con un vector binario) supera la capacidad del camión o no.
+- **`verify_assignment(...)`**: Valida nuevamente si la suma de masa y volumen de un cluster sobrepasa la capacidad del camión.
+- **`verify_total_truck_usage(...)`**: Verifica a nivel general si el uso acumulado (masa/volumen) de un camión no supera el 100%.
+- **`update_truck_usage(...)`**: Acumula la masa y volumen utilizados por un camión.
+- **`assign_cluster_to_truck(cluster_df, truck_id, truck_data, cluster_id)`**: Asigna de forma definitiva un cluster de pedidos al camión, si cumple con las restricciones.
+
+### Preprocesamiento de datos y clustering
+
+- Se convierten a numéricos las columnas `maximum_permissible_mass` y `maximum_permissible_volume`.
+- Se eliminan registros con valores nulos en dichas columnas.
+- Se crea una columna `uploaded` para marcar si el pedido ha sido asignado (`True`/`False`).
+- Se definen **8 centroides** manuales (predefinidos) en `cluster_centers`.
+- Se aplica `KMeans` forzando la inicialización de los centroides (con `init=cluster_centers`).
+- Cada pedido se clasifica en uno de los 8 clusters (`df_order['cluster']`).
+
+### Estructura de datos para la asignación
+
+- Se agrupan los pedidos en un diccionario `clusters`, con la forma:
+  ```python
+  {
+    'cluster_0': DataFrame con pedidos del cluster 0,
+    'cluster_1': DataFrame con pedidos del cluster 1,
+    ...
+  }
+
+
+
+
+
+### Script 2: Optimización de la Ruta descrita por el camión de reparto.
 
 #### Explicación Paso a Paso
 
@@ -299,56 +358,3 @@ with mysql.connector.connect(**DB_CONFIG) as conn:
 
 
 ```
-
-
-markdown
-# Script 2: Asignación de Pedidos a Camiones según Capacidad y Ubicación
-
-## Explicación Paso a Paso
-
-### Importaciones y conexión a la base de datos
-
-- Se importan las librerías necesarias:
-  - `pymysql` para conectar a la base de datos MySQL.
-  - `pandas` para manipular la información en forma de DataFrame.
-  - `pygad` para la parte de optimización con algoritmos genéticos.
-  - `KMeans` de `sklearn.cluster` para el clustering de pedidos.
-  - `folium` para la visualización en el mapa.
-  - `numpy` para manejo de arreglos y funciones matemáticas.
-- Se establece la conexión a la base de datos (`conn = pymysql.connect(...)).`
-
-### Consulta de datos
-
-- Se obtienen los datos de los **camiones** (`truck`) y los **pedidos** (`order`) desde la base de datos, guardándolos en DataFrames de pandas:
-  - `df_truck`: columnas `id`, `license_plate`, `max_mass`, `max_volume`.
-  - `df_order`: columnas `id`, `maximum_permissible_mass`, `maximum_permissible_volume`, `longitude`, `latitude`.
-
-### Funciones auxiliares
-
-- **`get_route_id(truck_id)`**: Dado el `id` de un camión, busca en la tabla `route` el `id` de la ruta asociada.
-- **`update_order_route(order_id, route_id)`**: Actualiza el campo `route_id` de un pedido en la tabla `order`.
-- **`can_fit_in_truck(cluster_df, truck_data, truck_id)`**: Verifica si **todo** un cluster de pedidos puede caber en el camión dado su uso actual (masa y volumen).
-- **`fitness_function(...)`**: Función de aptitud (fitness) que se emplea en `pygad` para comprobar si la selección de clusters (con un vector binario) supera la capacidad del camión o no.
-- **`verify_assignment(...)`**: Valida nuevamente si la suma de masa y volumen de un cluster sobrepasa la capacidad del camión.
-- **`verify_total_truck_usage(...)`**: Verifica a nivel general si el uso acumulado (masa/volumen) de un camión no supera el 100%.
-- **`update_truck_usage(...)`**: Acumula la masa y volumen utilizados por un camión.
-- **`assign_cluster_to_truck(cluster_df, truck_id, truck_data, cluster_id)`**: Asigna de forma definitiva un cluster de pedidos al camión, si cumple con las restricciones.
-
-### Preprocesamiento de datos y clustering
-
-- Se convierten a numéricos las columnas `maximum_permissible_mass` y `maximum_permissible_volume`.
-- Se eliminan registros con valores nulos en dichas columnas.
-- Se crea una columna `uploaded` para marcar si el pedido ha sido asignado (`True`/`False`).
-- Se definen **8 centroides** manuales (predefinidos) en `cluster_centers`.
-- Se aplica `KMeans` forzando la inicialización de los centroides (con `init=cluster_centers`).
-- Cada pedido se clasifica en uno de los 8 clusters (`df_order['cluster']`).
-
-### Estructura de datos para la asignación
-
-- Se agrupan los pedidos en un diccionario `clusters`, con la forma:
-  ```python
-  {
-    'cluster_0': DataFrame con pedidos del cluster 0,
-    'cluster_1': DataFrame con pedidos del cluster 1,
-    ...
-  }

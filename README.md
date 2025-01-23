@@ -2,7 +2,7 @@
 
 ## 1. Flujo General del Trabajo.
 
-1. **Lectura de datos desde la base de datos.**:
+1. **Lectura de datos desde la base de datos**:
    - Se extrae información relevante (rutas, pedidos, camiones, etc.) de la base de datos.
    
 2. **Script 1**:

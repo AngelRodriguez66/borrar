@@ -5,22 +5,21 @@
 1. **Lectura de datos desde la base de datos**:
    - Se extrae información relevante (rutas, pedidos, camiones, etc.) de la base de datos.
    
-2. **Script 1**: 
-   - **Objetivo**: Optimizar el orden de entrega de pedidos asociados a cada ruta utilizando la API de GraphHopper y un método de recorrido "greedy" (codicioso) para generar el orden inicial de visitas.  
-   - **Procesos principales**:
-     1. Calcular la distancia entre puntos (almacén y pedidos).  
-     2. Generar un recorrido básico (orden codicioso) para cada ruta a partir de la ubicación del almacén.  
-     3. Enviar los datos a la API de GraphHopper para obtener un orden más refinado.  
-     4. Guardar la secuencia final de pedidos optimizada en la base de datos.
-   
-3. **Script 2**:
+2. **Script 1**:
    - **Objetivo**: Asignar los pedidos existentes a camiones específicos de forma que se optimice el uso del espacio y masa disponible de cada camión.
    - **Procesos principales**:
      1. Clasificar los pedidos en clusters (grupos) utilizando K-Means con centroides predefinidos.  
      2. Verificar la capacidad de cada camión (masa y volumen).  
      3. Asignar cada cluster de pedidos a un camión apropiado y actualizar la base de datos con esta asignación.  
      4. Generar un mapa HTML mostrando la distribución geográfica de los pedidos, sus estados (asignado / no asignado) y los centroides de cada cluster.
-
+   
+3. **Script 2**: 
+   - **Objetivo**: Optimizar el orden de entrega de pedidos asociados a cada ruta utilizando la API de GraphHopper y un método de recorrido "greedy" (codicioso) para generar el orden inicial de visitas.  
+   - **Procesos principales**:
+     1. Calcular la distancia entre puntos (almacén y pedidos).  
+     2. Generar un recorrido básico (orden codicioso) para cada ruta a partir de la ubicación del almacén.  
+     3. Enviar los datos a la API de GraphHopper para obtener un orden más refinado.  
+     4. Guardar la secuencia final de pedidos optimizada en la base de datos.
 ---
 
 ## 2. Descripción Detallada de los Scripts

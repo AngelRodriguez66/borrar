@@ -24,11 +24,7 @@
 
 ## 2. Descripción Detallada de los Scripts
 
-
-
-
-markdown
-# Script 1: Optimización de la carga del camión.
+## Script 1: Optimización de la carga del camión.
 
 ## Explicación Paso a Paso
 
@@ -83,9 +79,9 @@ markdown
 
 
 
-### Script 2: Optimización de la Ruta descrita por el camión de reparto.
+## Script 2: Optimización de la Ruta descrita por el camión de reparto.
 
-#### Explicación Paso a Paso
+## Explicación Paso a Paso
 
 1. **Importación de librerías y configuración de variables**  
    - Se importan las librerías necesarias: `requests`, `pandas`, `mysql.connector`, y funciones matemáticas para el cálculo de distancias (`radians`, `sin`, `cos`, etc.).  

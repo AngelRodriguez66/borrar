@@ -1,4 +1,4 @@
-# Proyecto de Optimización de Rutas y Asignación de Pedidos
+# Proyecto de Optimización de Rutas y de Asignación de Pedidos
 
 ## 1. Flujo General del Trabajo
 
